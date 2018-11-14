@@ -351,10 +351,10 @@ BOOL removeLoadEntryFromBinary(NSMutableData *binary, struct thin_header macho, 
     macho.header.ncmds -= num;
     macho.header.sizeofcmds -= cumulativeSize;
     
-    unsigned int zeroByte = 0;
-    
+	char * cbuf = (char*)calloc(1, cumulativeSize);
     // append a null byte for every one we removed to the end of the header
-    [binary replaceBytesInRange:NSMakeRange(macho.offset + macho.header.sizeofcmds + macho.size, 0) withBytes:&zeroByte length:cumulativeSize];
+    [binary replaceBytesInRange:NSMakeRange(macho.offset + macho.header.sizeofcmds + macho.size, 0) withBytes:cbuf length:cumulativeSize];
+	free(cbuf);
     [binary replaceBytesInRange:NSMakeRange(macho.offset, sizeof(macho.header))
                       withBytes:&macho.header
                          length:sizeof(macho.header)];
